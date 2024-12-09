@@ -1,0 +1,15 @@
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+
+# Temporary or backup files
+backup/
+errorrs/
+
+# Shell scripts (optional, if sensitive)
+repo.sh
+
+# Personal notes
+notes
+
+.terraform/
