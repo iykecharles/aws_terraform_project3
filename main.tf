@@ -597,28 +597,7 @@ resource "aws_codedeploy_deployment_group" "aws_terraform_project" {
 
 }
 
-#Code Deploy IAM_ROLE, POLICY AND ATTACHMENT...
-/*
-data "aws_iam_policy_document" "codebuild_assume_role" {
-  statement {
-    effect = "Allow"
 
-    principals {
-      type        = "Service"
-      identifiers = ["codebuild.amazonaws.com"]
-    }
-
-    actions = [
-      "ec2:DescribeInstances",
-      "ec2:DescribeTags",
-      "codedeploy:*",
-      "s3:*",
-      "cloudwatch:*",
-      "iam:PassRole",
-    ]
-  }
-}
-*/
 resource "aws_iam_role" "example" {
   name               = "example"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
@@ -685,13 +664,15 @@ data "aws_iam_policy_document" "example" {
     effect = "Allow"
 
     actions = [
-      "codecommit:ListBranches",
-      "codecommit:GetRepository",
-      "codecommit:GitPull",
-      "codecommit:BatchGetRepositories",
+      "github:RepoRead",
+      "github:RepoWrite",
+      "github:ActionsRead",
+      "github:ActionsWrite"
     ]
 
-    resources = ["arn:aws:codecommit:*:827950560876:*"]
+    resources = [
+      "arn:aws:github:*:iykecharles/aws_terraform_project3.git"
+    ]
   }
 }
 
@@ -746,7 +727,7 @@ resource "aws_codepipeline" "codepipeline" {
         Owner = "iykecharles"
         Repo = "https://github.com/iykecharles/aws_terraform_project3.git"
         Branch = "main"
-        OAuthToken = var.github_token
+        OAuthToken = env.GITHUB_TOKEN
         
       }
     }
@@ -835,7 +816,8 @@ data "aws_iam_policy_document" "codepipeline_policy" {
       "github:ListRepositories",
     ]
     #arn:aws:iam::123456789012:role/codepipeline-example-role
-    resources = [aws_codecommit_repository.test.arn]
+    #resources = [aws_codecommit_repository.test.arn]
+    resources = ["*"]
   }
   
   statement {
