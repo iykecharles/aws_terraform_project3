@@ -468,12 +468,6 @@ resource "aws_s3_bucket" "aws-terraform-project1-bucket" {
   }
 }
 
-#***aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection***
-resource "aws_codestarconnections_connection" "github_connection" {
-  name          = "charles316-aws-terraform-project"
-  provider_type = "GitHub"
-}
-
 
 #***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***#
 
@@ -514,10 +508,6 @@ data "aws_iam_policy_document" "example" {
       "ec2:DescribeNetworkInterfaces",
       "ec2:DeleteNetworkInterface",
       "ec2:DescribeSubnets",
-      "ec2:RunInstances",
-      "ec2:TerminateInstances",
-      "ec2:CreateTags",
-      "ec2:AttachNetworkInterface",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeVpcs",
     ]
@@ -802,17 +792,21 @@ resource "aws_codepipeline" "codepipeline" {
 
   stage {
     name = "Source"
+
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "AWS"
-      provider         = "CodeStarSourceConnection"
+      owner            = "ThirdParty"
+      provider         = "GitHub"
       version          = "1"
       output_artifacts = ["source_output"]
+
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
-        FullRepositoryId = "my-organization/test"
-        BranchName       = "main"
+        Owner      = "iykecharles"
+        Repo       = "https://github.com/iykecharles/aws_terraform_project3.git"
+        Branch     = "main"
+        OAuthToken = var.github_token
+
       }
     }
   }

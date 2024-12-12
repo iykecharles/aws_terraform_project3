@@ -910,3 +910,85 @@ configuration = {
   
   BranchName = "main"
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data "aws_iam_policy_document" "codedeploy_policy" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+
+    resources = ["*"]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:DescribeDhcpOptions",
+      "ec2:DescribeNetworkInterfaces",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeVpcs",
+    ]
+
+    resources = ["*"]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["s3:*"]
+    resources = [
+      aws_s3_bucket.codebuild_bucket.arn,
+      "${aws_s3_bucket.codebuild_bucket.arn}/*",
+    ]
+  }
+
+  statement {
+    effect  = "Allow"
+    actions = ["sns:Publish"]
+    resources = ["arn:aws:sns:us-east-1:827950560876:example-topic"]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "github:RepoRead",
+      "github:RepoWrite",
+      "github:ActionsRead",
+      "github:ActionsWrite"
+    ]
+
+    resources = [
+      "arn:aws:github:*:iykecharles/aws_terraform_project3.git"
+    ]
+  }
+}
+
+resource "aws_sns_topic" "codedeploy" {
+  name = "example-topic"
+}
