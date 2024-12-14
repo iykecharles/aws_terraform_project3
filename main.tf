@@ -903,7 +903,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     effect = "Allow"
 
     actions = [
-      "codestar-connections:UseConnection",
+      "codestar:*",
     ]
 
     resources = [
