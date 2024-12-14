@@ -468,6 +468,12 @@ resource "aws_s3_bucket" "aws-terraform-project1-bucket" {
   }
 }
 
+#***aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection******aws_codestarconnections_connection***
+resource "aws_codestarconnections_connection" "github_connection" {
+  name          = "charles316-aws-terraform-project"
+  provider_type = "GitHub"
+}
+
 
 #***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***##***code build***#
 
@@ -508,6 +514,10 @@ data "aws_iam_policy_document" "example" {
       "ec2:DescribeNetworkInterfaces",
       "ec2:DeleteNetworkInterface",
       "ec2:DescribeSubnets",
+      "ec2:RunInstances",
+      "ec2:TerminateInstances",
+      "ec2:CreateTags",
+      "ec2:AttachNetworkInterface",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeVpcs",
     ]
@@ -564,8 +574,15 @@ resource "aws_codebuild_project" "example" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
+    environment_variable {
+      name  = "AWS_REGION"
+      value = "us-east-1"
+    }
+
 
   }
+
+
 
   logs_config {
     cloudwatch_logs {
@@ -749,7 +766,7 @@ data "aws_iam_policy_document" "codedeploy_policy" {
     resources = [aws_sns_topic.codedeploy.arn]
     #resources = ["arn:aws:sns:us-east-1:827950560876:example-topic"]
   }
-/*
+  /*
   statement {
     effect = "Allow"
 
@@ -792,21 +809,20 @@ resource "aws_codepipeline" "codepipeline" {
 
   stage {
     name = "Source"
-
     action {
       name             = "Source"
       category         = "Source"
-      owner            = "ThirdParty"
-      provider         = "GitHub"
+      owner            = "AWS"
+      provider         = "CodeStarSourceConnection"
       version          = "1"
       output_artifacts = ["source_output"]
-
       configuration = {
-        Owner      = "iykecharles"
-        Repo       = "https://github.com/iykecharles/aws_terraform_project3.git"
-        Branch     = "main"
-        OAuthToken = var.github_token
-
+        ConnectionArn = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+        #ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
+        FullRepositoryId = "iykecharles/aws_terraform_project3"
+        #FullRepositoryId = "https://github.com/iykecharles/aws_terraform_project3.git"
+        #FullRepositoryId = "git::https://github.com/iykecharles/aws_terraform_project3.git"
+        BranchName = "main"
       }
     }
   }
@@ -887,6 +903,17 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     effect = "Allow"
 
     actions = [
+      "codestar:*",
+    ]
+
+    resources = [
+      "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+    ]
+  }
+  /*  statement {
+    effect = "Allow"
+
+    actions = [
       "github:GetBranch",
       "github:GetCommit",
       "github:GetRepository",
@@ -896,7 +923,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     #arn:aws:iam::123456789012:role/codepipeline-example-role
     #resources = [aws_codecommit_repository.test.arn]
     resources = ["*"]
-  }
+  }  */
 
   statement {
     effect = "Allow"
@@ -904,6 +931,22 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     actions = [
       "codebuild:BatchGetBuilds",
       "codebuild:StartBuild",
+      "codebuild:StopBuild",
+    ]
+
+    resources = [
+      "arn:aws:codebuild:us-east-1:827950560876:project/aws_terraform_project3_build"
+    ]
+
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "cloudwatch:*",
+      "logs:*",
+      "s3:*",
     ]
 
     resources = ["*"]
@@ -916,27 +959,3 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
   policy = data.aws_iam_policy_document.codepipeline_policy.json
 }
 
-a2-2d71-43e4-9cac-c059dc1c95c2,arn:aws:elasticloadbalancing:us-east-1:827950560876:loadbalancer/app/applicationloadbalcharles/834b16a5bcdaf1f9]
-╷
-│ Error: creating WAFv2 IPSet (example): operation error WAFV2: CreateIPSet, https response error StatusCode: 400, RequestID: 0ada2d03-21fc-4d03-890b-8ff2b6da4423, WAFDuplicateItemException: AWS WAF couldn’t perform the operation because some resource in your request is a duplicate of an existing one.
-│
-│   with aws_wafv2_ip_set.example,
-│   on main.tf line 390, in resource "aws_wafv2_ip_set" "example":
-│  390: resource "aws_wafv2_ip_set" "example" {
-│
-╵
-╷
-│ Error: creating IAM Policy (test_policy): operation error IAM: CreatePolicy, https response error StatusCode: 409, RequestID: 1bd4eac9-8bc4-4b8a-9a65-845a48c07999, EntityAlreadyExists: A policy called test_policy already exists. Duplicate names are not allowed.
-│
-│   with aws_iam_policy.policy,
-│   on main.tf line 429, in resource "aws_iam_policy" "policy":
-│  429: resource "aws_iam_policy" "policy" {
-│
-╵
-╷
-│ Error: creating IAM Instance Profile (test_profile): operation error IAM: CreateInstanceProfile, https response error StatusCode: 409, RequestID: 12abfd55-28ee-43a0-ba0b-36b5559dde53, EntityAlreadyExists: Instance Profile test_profile already exists.
-│
-│   with aws_iam_instance_profile.test_profile,
-│   on main.tf line 455, in resource "aws_iam_instance_profile" "test_profile":
-│  455: resource "aws_iam_instance_profile" "test_profile" {
-│

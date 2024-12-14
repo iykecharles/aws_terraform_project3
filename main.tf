@@ -493,6 +493,18 @@ data "aws_iam_policy_document" "codebuild_assume_role" {
 }
 
 data "aws_iam_policy_document" "example" {
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "codebuild:*",
+    ]
+
+    resources = [
+      "arn:aws:codebuild:us-east-1:827950560876:project/aws_terraform_project3_build"
+    ]
+  }
+
   statement {
     effect = "Allow"
 
@@ -599,12 +611,23 @@ resource "aws_codebuild_project" "example" {
   source {
     type            = "GITHUB"
     location        = "https://github.com/iykecharles/aws_terraform_project3.git"
+    buildspec       = "buildspec.yml"
     git_clone_depth = 1
 
     git_submodules_config {
       fetch_submodules = true
     }
+
+/*     {
+      type = "OAUTH"
+      #type = "CODESTAR_CONNECTION"
+      resource = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+    }*/
+
+    
   }
+
+
 
   source_version = "main"
 
