@@ -817,7 +817,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+        ConnectionArn = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
         #ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
         FullRepositoryId = "iykecharles/aws_terraform_project3"
         #FullRepositoryId = "https://github.com/iykecharles/aws_terraform_project3.git"
@@ -903,6 +903,17 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     effect = "Allow"
 
     actions = [
+      "codestar-connections:UseConnection",
+    ]
+
+    resources = [
+      "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+    ]
+  }
+  /*  statement {
+    effect = "Allow"
+
+    actions = [
       "github:GetBranch",
       "github:GetCommit",
       "github:GetRepository",
@@ -912,7 +923,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     #arn:aws:iam::123456789012:role/codepipeline-example-role
     #resources = [aws_codecommit_repository.test.arn]
     resources = ["*"]
-  }
+  }  */
 
   statement {
     effect = "Allow"
@@ -920,6 +931,22 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     actions = [
       "codebuild:BatchGetBuilds",
       "codebuild:StartBuild",
+      "codebuild:StopBuild",
+    ]
+
+    resources = [
+      "arn:aws:codebuild:us-east-1:827950560876:project/aws_terraform_project3_build"
+    ]
+
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "cloudwatch:*",
+      "logs:*",
+      "s3:*",
     ]
 
     resources = ["*"]
