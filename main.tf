@@ -574,8 +574,15 @@ resource "aws_codebuild_project" "example" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
+    environment_variable {
+      name  = "AWS_REGION"
+      value = "us-east-1"
+    }
+
 
   }
+
+
 
   logs_config {
     cloudwatch_logs {
@@ -759,7 +766,7 @@ data "aws_iam_policy_document" "codedeploy_policy" {
     resources = [aws_sns_topic.codedeploy.arn]
     #resources = ["arn:aws:sns:us-east-1:827950560876:example-topic"]
   }
-/*
+  /*
   statement {
     effect = "Allow"
 
@@ -811,8 +818,10 @@ resource "aws_codepipeline" "codepipeline" {
       output_artifacts = ["source_output"]
       configuration = {
         ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
-        FullRepositoryId = "my-organization/test"
-        BranchName       = "main"
+        FullRepositoryId = "iykecharles/aws_terraform_project3"
+        #FullRepositoryId = "https://github.com/iykecharles/aws_terraform_project3.git"
+        #FullRepositoryId = "git::https://github.com/iykecharles/aws_terraform_project3.git"
+        BranchName = "main"
       }
     }
   }
