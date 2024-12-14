@@ -817,7 +817,8 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
+        ConnectionArn    = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+        #ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
         FullRepositoryId = "iykecharles/aws_terraform_project3"
         #FullRepositoryId = "https://github.com/iykecharles/aws_terraform_project3.git"
         #FullRepositoryId = "git::https://github.com/iykecharles/aws_terraform_project3.git"
