@@ -814,7 +814,42 @@ resource "aws_sns_topic" "codedeploy" {
   name = "example-topic"
 }
 
+#added to me...
+resource "aws_s3_bucket_policy" "codebuild_bucket_policy" {
+  bucket = aws_s3_bucket.codebuild_bucket.id
 
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { Service = "codebuild.amazonaws.com" }
+        Action    = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket"
+        ]
+        Resource  = [
+          "${aws_s3_bucket.codebuild_bucket.arn}",
+          "${aws_s3_bucket.codebuild_bucket.arn}/*"
+        ]
+      },
+      {
+        Effect    = "Allow"
+        Principal = { AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${aws_iam_role.codebuild_role.name}" }
+        Action    = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket"
+        ]
+        Resource  = [
+          "${aws_s3_bucket.codebuild_bucket.arn}",
+          "${aws_s3_bucket.codebuild_bucket.arn}/*"
+        ]
+      }
+    ]
+  })
+}
 
 
 ################################################################################################################################################################################################
