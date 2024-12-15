@@ -623,7 +623,7 @@ resource "aws_codebuild_project" "example" {
 /*  auth   {
       type = "OAUTH"
       #type = "CODESTAR_CONNECTION"
-      resource = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+      resource = "arn:aws:codestar-connections:us-east-1:827950560876:connection/09c915c4-7850-4316-9d60-c4f7b45be88e"
     }*/
 
     
@@ -842,7 +842,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
       output_artifacts = ["source_output"]
       configuration = {
-        ConnectionArn = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+        ConnectionArn = "arn:aws:codestar-connections:us-east-1:827950560876:connection/09c915c4-7850-4316-9d60-c4f7b45be88e"
         #ConnectionArn    = aws_codestarconnections_connection.github_connection.arn
         FullRepositoryId = "iykecharles/aws_terraform_project3"
         #FullRepositoryId = "https://github.com/iykecharles/aws_terraform_project3.git"
@@ -936,7 +936,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     ]
 
     resources = [
-      "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
+      "arn:aws:codestar-connections:us-east-1:827950560876:connection/09c915c4-7850-4316-9d60-c4f7b45be88e"
     ]
   }
   /*  statement {
