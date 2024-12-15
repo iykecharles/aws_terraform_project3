@@ -910,7 +910,10 @@ data "aws_iam_policy_document" "codepipeline_assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["codepipeline.amazonaws.com"]
+      identifiers = [
+        "codepipeline.amazonaws.com",
+        "codebuild.amazonaws.com"
+        ]
     }
 
     actions = ["sts:AssumeRole"]
@@ -974,7 +977,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
       "codepipeline:GetPipelineState",
       "codepipeline:GetPipelineExecution"
     ]
-    resources = ["*"] # Scope to your pipeline ARN
+    resources = [aws_codepipeline.codepipeline.arn] # Scope to your pipeline ARN
   }
 
   statement {
