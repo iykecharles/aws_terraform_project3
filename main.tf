@@ -865,7 +865,7 @@ resource "aws_codepipeline" "codepipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = "test"
+        ProjectName = aws_codebuild_project.example.name
       }
     }
   }
