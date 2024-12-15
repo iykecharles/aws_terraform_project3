@@ -620,7 +620,7 @@ resource "aws_codebuild_project" "example" {
       fetch_submodules = true
     }
 
-/*     {
+/*  auth   {
       type = "OAUTH"
       #type = "CODESTAR_CONNECTION"
       resource = "arn:aws:codestar-connections:us-east-1:827950560876:connection/5ef828c6-6184-4551-b306-e9847b7c5986"
@@ -928,7 +928,8 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     effect = "Allow"
 
     actions = [
-      "codestar:*",
+      #"codestar:*",
+      "codestar-connections:UseConnection",
     ]
 
     resources = [
