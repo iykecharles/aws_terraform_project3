@@ -574,7 +574,7 @@ data "aws_iam_policy_document" "example" {
 resource "aws_codebuild_project" "example" {
   name          = "aws_terraform_project3_build"
   description   = "code build for aws_terraform_project3"
-  build_timeout = 10
+  build_timeout = 20
   service_role  = aws_iam_role.codebuild_role.arn
 
   artifacts {
