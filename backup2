@@ -959,3 +959,18 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
   policy = data.aws_iam_policy_document.codepipeline_policy.json
 }
 
+condition {
+  test     = "StringEquals"
+  variable = "ec2:Subnet"
+
+  values = [
+    aws_subnet.subnet1.id,
+    aws_subnet.subnet2.id,
+  ]
+}
+
+condition {
+  test     = "StringEquals"
+  variable = "ec2:AuthorizedService"
+  values   = ["codebuild.amazonaws.com"]
+}

@@ -492,6 +492,8 @@ data "aws_iam_policy_document" "codebuild_assume_role" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "example" {
 
   statement {
@@ -547,8 +549,7 @@ data "aws_iam_policy_document" "example" {
       variable = "ec2:Subnet"
 
       values = [
-        aws_subnet.subnet1.id,
-        aws_subnet.subnet2.id,
+        for subnet in [aws_subnet.subnet1.id, aws_subnet.subnet2.id] : "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/${subnet}"
       ]
     }
 
@@ -578,7 +579,7 @@ resource "aws_codebuild_project" "example" {
   artifacts {
     #type = "NO_ARTIFACTS"
     type = "CODEPIPELINE"
-    
+
   }
 
 
@@ -611,7 +612,7 @@ resource "aws_codebuild_project" "example" {
   }
 
   source {
-    type            = "CODEPIPELINE"
+    type = "CODEPIPELINE"
     #location        = "https://github.com/iykecharles/aws_terraform_project3.git"
     buildspec       = "buildspec.yml"
     git_clone_depth = 1
@@ -620,13 +621,13 @@ resource "aws_codebuild_project" "example" {
       fetch_submodules = true
     }
 
-/*  auth   {
+    /*  auth   {
       type = "OAUTH"
       #type = "CODESTAR_CONNECTION"
       resource = "arn:aws:codestar-connections:us-east-1:827950560876:connection/09c915c4-7850-4316-9d60-c4f7b45be88e"
     }*/
 
-    
+
   }
 
 
@@ -909,11 +910,11 @@ data "aws_iam_policy_document" "codepipeline_assume_role" {
     effect = "Allow"
 
     principals {
-      type        = "Service"
+      type = "Service"
       identifiers = [
         "codepipeline.amazonaws.com",
         "codebuild.amazonaws.com"
-        ]
+      ]
     }
 
     actions = ["sts:AssumeRole"]
@@ -968,7 +969,7 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     ]
 
   }
-#check to see if these exist
+  #check to see if these exist
   statement {
     effect = "Allow"
     actions = [
