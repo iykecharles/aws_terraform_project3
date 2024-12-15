@@ -15,7 +15,7 @@ phases:
 
   pre_build:
     commands:
-      - echo "Setting up Terraform backend..."
+      - echo "Setting up the Terraform backend..."
       - terraform init
       - terraform validate
 
