@@ -965,6 +965,17 @@ data "aws_iam_policy_document" "codepipeline_policy" {
     ]
 
   }
+#check to see if these exist
+  statement {
+    effect = "Allow"
+    actions = [
+      "codepipeline:StartPipelineExecution",
+      "codepipeline:GetPipeline",
+      "codepipeline:GetPipelineState",
+      "codepipeline:GetPipelineExecution"
+    ]
+    resources = ["*"] # Scope to your pipeline ARN
+  }
 
   statement {
     effect = "Allow"
