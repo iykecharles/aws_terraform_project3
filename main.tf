@@ -549,7 +549,8 @@ data "aws_iam_policy_document" "example" {
       variable = "ec2:Subnet"
 
       values = [
-        for subnet in [aws_subnet.subnet1.id, aws_subnet.subnet2.id] : "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/${subnet}"
+        "arn:aws:ec2:us-east-1:827950560876:subnet/${aws_subnet.subnet1.id}",
+        "arn:aws:ec2:us-east-1:827950560876:subnet/${aws_subnet.subnet2.id}"
       ]
     }
 
