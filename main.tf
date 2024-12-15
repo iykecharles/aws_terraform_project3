@@ -611,8 +611,8 @@ resource "aws_codebuild_project" "example" {
   }
 
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/iykecharles/aws_terraform_project3.git"
+    type            = "CODEPIPELINE"
+    #location        = "https://github.com/iykecharles/aws_terraform_project3.git"
     buildspec       = "buildspec.yml"
     git_clone_depth = 1
 
