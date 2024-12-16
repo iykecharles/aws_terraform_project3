@@ -679,7 +679,7 @@ resource "aws_s3_bucket_public_access_block" "codebuild_bucket_pab" {
   restrict_public_buckets = true
 }
 
-#***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***#
+#***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***##***code deploy ***#
 
 resource "aws_codedeploy_app" "aws_terraform_project" {
   name = "aws_terraform_project"
